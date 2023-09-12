@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from .roster import rosterData
 from .teams import teamsData
+from .players import playersData
 
 # Create your views here.
 @api_view(['GET'])
@@ -21,6 +22,10 @@ def getRoutes(request):
         'api/rosters/<update>/<id>/',
 
         'api/teams/',
+        'api/teams/<id>',
+
+        'api/players/',
+        'api/players/<id>',
     ]
     return Response(routes)
 
@@ -28,42 +33,65 @@ def getRoutes(request):
 def getRosters(request):
     return Response(rosterData)
 
+
 @api_view(['GET'])
-def getRoster(request, pk):
-    roster = None
+def getRoster(request, id):
+    result = None
+    print("Searching for id:", id)
+    print("Type of id:", type(id))
+    for player_id in rosterData['roster']:
+        print("player ID: ", player_id['person']['id'])
+        print("Type of Player ID: ", type(player_id['person']['id']))
+        if player_id['person']['id'] == id:
+            print('Player ID after if statement: ', player_id['person']['id'])
+            result = player_id
+            break
 
-    for player in rosterData:
-        if 'person' in player and 'id' in player['person']:
-            player_id = player['person']['id']
-            print(f"Checking player with id: {player_id}")
-            # Check if player_id is a string and can be converted to an integer
-            if isinstance(player_id, str) and player_id.isdigit():
-                player_id = int(player_id)  # Convert the string to an integer
-            # Now you can compare pk (an integer) with player_id (an integer)
-            if isinstance(player_id, int) and player_id == pk:
-                roster = player
-                break
-    
-    if roster is not None:
-        return Response(roster)
-    else:
-        return Response({'error': "Player not found"}, status=404)
+    print("Result:", result)
 
-# @api_view(['GET'])
-# def getRoster(request, pk):
-#     roster = None
-#     for player in rosterData:
-#         if 'person' in player and 'id' in player['person']:
-#             if isinstance(player['person']['id'], int) and player['person']['id'] == pk:
-#                 roster = player
-#             break
-#         if roster is not None:
-#              return Response(roster)
-#         else:
-#             return Response({'error': "Player not found"}, status=404)
-        
-#     return Response(roster)
+    return Response(result)
+
 
 @api_view(['GET'])
 def getTeams(request):
+    for team in teamsData['teams']:
+        print(team['abbreviation'])
     return Response(teamsData)
+
+@api_view(['GET'])
+def getTeam(request, id):
+    result = None
+    print("Searching for id:", id)
+    print("Type of id:", type(id))
+    for team_id in teamsData['teams']:
+        print("player ID: ",team_id['springLeague']['id'])
+        if team_id['springLeague']['id'] == id:
+            print('Player ID after if statement: ', team_id['springLeague']['id'])
+            result = team_id
+            break
+
+    print("Result:", result)
+
+    return Response(result)
+
+@api_view(['GET'])
+def getPlayers(request):
+    return Response(playersData)
+
+
+@api_view(['GET'])
+def getPlayer(request, id):
+    result = None
+    print("Searching for id:", id)
+    print("Type of id:", type(id))
+    for player_id in playersData['roster']:
+        print("player ID: ", player_id['person']['id'])
+        print("Type of Player ID: ", type(player_id['person']['id']))
+        if player_id['person']['id'] == id:
+            print('Player ID after if statement: ', player_id['person']['id'])
+            result = player_id
+            break
+
+    print("Result:", result)
+
+    return Response(result)

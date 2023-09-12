@@ -11,7 +11,6 @@ def main_request(rosterurl, endpoint):
 def parse_json(response):
     charList = []
     for item in response['roster']:
-        # return
         char = {
             "id": item['person']["id"],
             "Full Name": item['person']['fullName'],
@@ -21,4 +20,4 @@ def parse_json(response):
     return charList
 
 rosterData = main_request(rosterurl, endpoint)
-print(parse_json(rosterData))
+# print(parse_json(rosterData))
